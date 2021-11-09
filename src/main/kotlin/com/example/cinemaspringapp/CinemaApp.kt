@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class CinemaSpringAppApplication
+class CinemaApp
 
 fun main(args: Array<String>) {
-    runApplication<CinemaSpringAppApplication>(*args)
+    runApplication<CinemaApp>(*args)
 }
