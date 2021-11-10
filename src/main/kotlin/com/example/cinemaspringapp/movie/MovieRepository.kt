@@ -14,7 +14,3 @@ data class Movie(
     val rating: MovieRating
 )
 
-data class UserMovieRating(
-    val movieId: MovieId,
-    val rating: Long
-)

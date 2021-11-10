@@ -27,12 +27,12 @@ class MovieRequests(private val restTemplate: TestRestTemplate) {
             Any::class.java
         )
 
-    fun rateMovie(movieId: String, userRating: Long): ResponseEntity<RateMovieResponse> =
+    fun rateMovie(movieId: String, userRating: Long): ResponseEntity<Any> =
         restTemplate.exchange(
             "/api/movies/${movieId}/ratings",
             POST,
             HttpEntity(userRatingRequestJson(userRating), headers()),
-            RateMovieResponse::class.java
+            Any::class.java
         )
 
 

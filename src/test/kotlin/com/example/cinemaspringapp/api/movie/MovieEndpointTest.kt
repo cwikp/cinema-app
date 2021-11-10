@@ -13,6 +13,9 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.OK
 
 @TestInstance(PER_CLASS)
@@ -30,7 +33,6 @@ class MovieEndpointTest : BaseIntegrationTest() {
     @Test
     fun `should get movie details and rate movie`() {
         //given
-        omdbApiStub.stubOmdbApiOkResponse(IMDB_ID)
         val movieId = saveMovie()
 
         //when
@@ -52,7 +54,36 @@ class MovieEndpointTest : BaseIntegrationTest() {
         }
     }
 
-    private fun saveMovie(): String = (movieRequests.saveMovie(IMDB_ID).body as Map<*, *>)["movieId"].toString()
+    @ParameterizedTest
+    @ValueSource(ints = [-1, 0, 11, Integer.MAX_VALUE])
+    fun `should throw bad request error if rating is not in expected range`(rating: Int) {
+        //given
+        val movieId = saveMovie()
+
+        //when
+        val response = movieRequests.rateMovie(movieId, rating.toLong())
+
+        //then
+        assertTrue(response.statusCode == BAD_REQUEST)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [1, 5, 10])
+    fun `should allow rating values in expected range`(rating: Int) {
+        //given
+        val movieId = saveMovie()
+
+        //when
+        val response = movieRequests.rateMovie(movieId, rating.toLong())
+
+        //then
+        assertTrue(response.statusCode == OK)
+    }
+
+    private fun saveMovie(): String {
+        omdbApiStub.stubOmdbApiOkResponse(IMDB_ID)
+        return (movieRequests.saveMovie(IMDB_ID).body as Map<*, *>)["movieId"].toString()
+    }
 
     private fun movieDetailsJsonResponse(movieId: String, rating: String) = mapOf(
         "movieId" to movieId,
