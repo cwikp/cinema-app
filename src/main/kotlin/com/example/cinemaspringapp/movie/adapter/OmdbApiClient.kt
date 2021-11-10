@@ -8,6 +8,9 @@ import com.example.cinemaspringapp.movie.imdb.ImdbIdValidator
 import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
 import com.fasterxml.jackson.annotation.JsonAlias
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -18,6 +21,11 @@ class OmdbApiClient(
 ) : ImdbMovieDetailsProvider, ImdbIdValidator {
 
     @Cacheable(value = [MOVIE_DETAILS_CACHE_NAME])
+    @Retryable(
+        value = [OmdbApiException::class],
+        maxAttemptsExpression = "\${external-services.omdb.retry.maxAttempts}",
+        backoff = Backoff(delayExpression = "\${external-services.omdb.retry.delayMs}")
+    )
     override fun fetchImdbMovieDetails(imdbId: ImdbId): ImdbMovieDetails? =
         exchangeImdbMovieDetailsRequest(imdbId.value)?.let {
             ImdbMovieDetails(
@@ -44,7 +52,7 @@ class OmdbApiClient(
                 body.response.toBoolean() -> body
                 else -> throw OmdbApiMovieDetailsNotFoundException("Movie details for ImdbId: $imdbId not found, error: ${body.error}")
             }
-        } catch (ex: Exception) {
+        } catch (ex: HttpServerErrorException) {
             throw OmdbApiException("Cannot fetch details from omdbApi for imdbId: $imdbId", ex)
         }
 
