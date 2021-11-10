@@ -1,19 +1,23 @@
 package com.example.cinemaspringapp.movie.adapter
 
+import com.example.cinemaspringapp.AllOpen
 import com.example.cinemaspringapp.movie.ImdbMovieDetails
 import com.example.cinemaspringapp.movie.config.OmdbConfigurationProperties
 import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory.ImdbId
 import com.example.cinemaspringapp.movie.imdb.ImdbIdValidator
 import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
 import com.fasterxml.jackson.annotation.JsonAlias
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
+@AllOpen
 class OmdbApiClient(
     private val omdbRestTemplate: RestTemplate,
     private val omdbConfig: OmdbConfigurationProperties
 ) : ImdbMovieDetailsProvider, ImdbIdValidator {
 
+    @Cacheable(value = [MOVIE_DETAILS_CACHE_NAME])
     override fun fetchImdbMovieDetails(imdbId: ImdbId): ImdbMovieDetails? =
         exchangeImdbMovieDetailsRequest(imdbId.value)?.let {
             ImdbMovieDetails(
@@ -63,3 +67,5 @@ class OmdbApiClient(
 
 class OmdbApiException(msg: String, ex: Exception? = null) : RuntimeException(msg, ex)
 class OmdbApiMovieDetailsNotFoundException(msg: String, ex: Exception? = null) : RuntimeException(msg, ex)
+
+const val MOVIE_DETAILS_CACHE_NAME = "movieDetailsCache"

@@ -6,3 +6,5 @@ external-services:
       connectTimeoutMillis: 100
       socketTimeoutMillis: 500
 
+cache:
+  movieDetails: maximumSize=10000,expireAfterWrite=24h,recordStats

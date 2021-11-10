@@ -2,15 +2,21 @@ package com.example.cinemaspringapp.movie.config
 
 import com.example.cinemaspringapp.movie.MovieFacade
 import com.example.cinemaspringapp.movie.MovieRepository
+import com.example.cinemaspringapp.movie.adapter.MOVIE_DETAILS_CACHE_NAME
 import com.example.cinemaspringapp.movie.adapter.MongoMovieRepository
 import com.example.cinemaspringapp.movie.adapter.OmdbApiClient
 import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory
 import com.example.cinemaspringapp.movie.imdb.ImdbIdValidator
 import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
+import com.github.benmanes.caffeine.cache.Caffeine
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.cache.CacheManager
+import org.springframework.cache.caffeine.CaffeineCache
+import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.core.MongoOperations
@@ -41,6 +47,16 @@ class MovieConfiguration {
             .setConnectTimeout(Duration.ofMillis(connection.connectTimeoutMillis))
             .setReadTimeout(Duration.ofMillis(connection.socketTimeoutMillis))
             .build()
+
+    @Bean
+    fun cacheManager(@Value("\${cache.movieDetails}") movieDetailsCacheConfig: String): CacheManager {
+        val cacheList = listOf(
+            CaffeineCache(MOVIE_DETAILS_CACHE_NAME, Caffeine.from(movieDetailsCacheConfig).build(), false),
+        )
+        return SimpleCacheManager().apply {
+            setCaches(cacheList)
+        }
+    }
 }
 
 @ConstructorBinding

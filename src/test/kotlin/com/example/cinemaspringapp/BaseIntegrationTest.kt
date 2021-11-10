@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.cache.CacheManager
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.test.context.ActiveProfiles
 
@@ -26,8 +27,16 @@ class BaseIntegrationTest {
     @Autowired
     lateinit var stubServer: StubServer
 
+    @Autowired
+    lateinit var cacheManager: CacheManager
+
     @AfterEach
     fun cleanup() {
+        clearDatabase()
+        invalidateCaches()
+    }
+
+    private fun clearDatabase() {
         mongoOperations.collectionNames.forEach { collection ->
             mongoOperations.getCollection(collection).deleteMany(
                 Document()
@@ -35,4 +44,8 @@ class BaseIntegrationTest {
         }
     }
 
+    private fun invalidateCaches() {
+        val caches = cacheManager.cacheNames.map { cacheManager.getCache(it) }
+        caches.forEach { it?.clear() }
+    }
 }
