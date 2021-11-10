@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.web.client.RestTemplate
+import java.time.Duration
 
 @Configuration
 @EnableConfigurationProperties(OmdbConfigurationProperties::class)
@@ -33,15 +34,24 @@ class MovieConfiguration {
 
     @Bean
     fun omdbApiClient(restTemplateBuilder: RestTemplateBuilder, omdbConfig: OmdbConfigurationProperties): OmdbApiClient =
-        OmdbApiClient(omdbRestTemplate(restTemplateBuilder), omdbConfig)
+        OmdbApiClient(omdbRestTemplate(restTemplateBuilder, omdbConfig.connection), omdbConfig)
 
-    private fun omdbRestTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate =
-        restTemplateBuilder.build()
+    private fun omdbRestTemplate(restTemplateBuilder: RestTemplateBuilder, connection: ConnectionProperties): RestTemplate =
+        restTemplateBuilder
+            .setConnectTimeout(Duration.ofMillis(connection.connectTimeoutMillis))
+            .setReadTimeout(Duration.ofMillis(connection.socketTimeoutMillis))
+            .build()
 }
 
 @ConstructorBinding
 @ConfigurationProperties("external-services.omdb")
 data class OmdbConfigurationProperties(
     val address: String,
-    val apikey: String
+    val apikey: String,
+    val connection: ConnectionProperties
+)
+
+data class ConnectionProperties(
+    val connectTimeoutMillis: Long,
+    val socketTimeoutMillis: Long
 )

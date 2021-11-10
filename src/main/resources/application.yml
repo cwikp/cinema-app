@@ -2,3 +2,7 @@ external-services:
   omdb:
     address: "http://www.omdbapi.com/"
     apikey: "fill-me"
+    connection:
+      connectTimeoutMillis: 100
+      socketTimeoutMillis: 500
+
