@@ -1,1 +1,4 @@
-
+external-services:
+  omdb:
+    address: "http://www.omdbapi.com/"
+    apikey: "fill-me"

@@ -1,7 +1,7 @@
 package com.example.cinemaspringapp.show.adapter
 
 import com.example.cinemaspringapp.show.Money
-import com.example.cinemaspringapp.show.MovieId
+import com.example.cinemaspringapp.movie.MovieId
 import com.example.cinemaspringapp.show.Show
 import com.example.cinemaspringapp.show.ShowId
 import com.example.cinemaspringapp.show.ShowName
@@ -47,7 +47,7 @@ class MongoShowRepository(private val mongoOperations: MongoOperations) : ShowRe
 }
 
 @Document(collection = "shows")
-@CompoundIndex(name = "", def = "{'$MOVIE_ID': 1, '$DATE': 1, '$NAME': 1}", unique = true)
+@CompoundIndex(name = "movieId_date_name", def = "{'$MOVIE_ID': 1, '$DATE': 1, '$NAME': 1}", unique = true)
 data class ShowDocument(
     @field:Indexed(unique = true) val showId: String,
     val name: String,

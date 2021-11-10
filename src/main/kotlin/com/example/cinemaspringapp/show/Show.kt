@@ -1,5 +1,6 @@
 package com.example.cinemaspringapp.show
 
+import com.example.cinemaspringapp.movie.MovieId
 import java.time.Instant
 
 data class Show (

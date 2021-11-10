@@ -1,7 +1,7 @@
 package com.example.cinemaspringapp.api.show
 
 import com.example.cinemaspringapp.show.Money.Companion.money
-import com.example.cinemaspringapp.show.MovieId
+import com.example.cinemaspringapp.movie.MovieId
 import com.example.cinemaspringapp.show.Show
 import com.example.cinemaspringapp.show.ShowId
 import com.example.cinemaspringapp.show.ShowName

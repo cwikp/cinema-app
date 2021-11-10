@@ -28,6 +28,7 @@ dependencies {
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mongodb")
+    testImplementation("com.xebialabs.restito:restito:0.9.3")
 }
 
 dependencyManagement {

@@ -1,7 +1,6 @@
-package com.example.cinemaspringapp.api
+package com.example.cinemaspringapp.api.show
 
 import com.example.cinemaspringapp.BaseIntegrationTest
-import com.example.cinemaspringapp.api.show.ShowResponse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeAll

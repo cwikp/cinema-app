@@ -1,1 +1,8 @@
+stubServer:
+  port: 11111
+
+external-services:
+  omdb:
+    address: "http://localhost:${stubServer.port}"
+    apikey: "omdb-so-secret"
 

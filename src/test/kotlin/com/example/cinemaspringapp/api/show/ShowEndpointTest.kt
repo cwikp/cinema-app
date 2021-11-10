@@ -1,4 +1,4 @@
-package com.example.cinemaspringapp.api
+package com.example.cinemaspringapp.api.show
 
 import com.example.cinemaspringapp.BaseIntegrationTest
 import org.junit.Assert.assertTrue

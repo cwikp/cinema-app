@@ -1,7 +1,6 @@
-package com.example.cinemaspringapp.api
+package com.example.cinemaspringapp.api.show
 
 import com.example.cinemaspringapp.api.show.ShowEndpoint.ShowsResponse
-import com.example.cinemaspringapp.api.show.ShowResponse
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
