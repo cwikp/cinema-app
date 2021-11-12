@@ -11,6 +11,10 @@ Using Gradle
 - ```./gradlew build``` - builds package
 - ```./gradlew test``` - runs all tests
 
+### Configuration
+Replace the value of OMDb API key in `application.yml` or any other suitable configuration file:
+```external-services.omdb.apikey: "fill-me"```.
+
 ---
 
 ## Choices
