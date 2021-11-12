@@ -1,6 +1,5 @@
 package com.example.cinemaspringapp.api.movie
 
-import com.example.cinemaspringapp.api.movie.MovieEndpoint.RateMovieResponse
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders

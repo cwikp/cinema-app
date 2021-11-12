@@ -31,7 +31,8 @@ class MongoShowRepository(private val mongoOperations: MongoOperations) : ShowRe
                 set(MOVIE_ID, show.movieId.value)
                 set("$DATE.$LOCAL_DATE_TIME", show.date.localDateTime)
                 set("$DATE.$ZONE_ID", show.date.zoneId)
-                set(BASE_PRICE, show.basePrice.value)
+                set("$PRICE.$BASE_PRICE", show.price.value)
+                set("$PRICE.$CURRENCY", show.price.currency)
             },
             ShowDocument::class.java
         )
@@ -56,7 +57,7 @@ data class ShowDocument(
     val name: String,
     val movieId: String,
     val date: DateDocument,
-    val basePrice: String
+    val price: PriceDocument
 )
 
 data class DateDocument(
@@ -64,12 +65,17 @@ data class DateDocument(
     val zoneId: String
 )
 
+data class PriceDocument(
+    val basePrice: String,
+    val currency: String
+)
+
 private fun ShowDocument.toDomain() = Show(
     showId = ShowId(showId),
     name = ShowName(name),
     movieId = MovieId(movieId),
     date = ShowDate(date.localDateTime, ZoneId.of(date.zoneId)),
-    basePrice = Money.money(basePrice)
+    price = Money.money(price.basePrice, price.currency)
 )
 
 private fun Show.toDocument() = ShowDocument(
@@ -77,7 +83,7 @@ private fun Show.toDocument() = ShowDocument(
     name = name.value,
     movieId = movieId.value,
     date = DateDocument(date.localDateTime, date.zoneId.toString()),
-    basePrice = basePrice.value
+    price = PriceDocument(price.value, price.currency.toString())
 )
 
 private const val SHOW_ID = "showId"
@@ -86,4 +92,6 @@ private const val MOVIE_ID = "movieId"
 private const val DATE = "date"
 private const val LOCAL_DATE_TIME = "localDateTime"
 private const val ZONE_ID = "zoneId"
+private const val PRICE = "price"
 private const val BASE_PRICE = "basePrice"
+private const val CURRENCY = "currency"

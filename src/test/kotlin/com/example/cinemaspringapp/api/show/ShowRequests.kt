@@ -59,7 +59,9 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
             "date": {
                 "localDateTime": "$date"
             },
-            "price": "$price"
+            "price": {
+                "basePrice": "$price"
+            }
         }
     """
 
@@ -70,7 +72,9 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
             "date": {
                 "localDateTime": "$date"
             },
-            "price": "$price"
+            "price": {
+                "basePrice": "$price"
+            }
         }
     """
 }

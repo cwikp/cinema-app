@@ -7,5 +7,5 @@ data class Show(
     val name: ShowName,
     val movieId: MovieId,
     val date: ShowDate,
-    val basePrice: Money
+    val price: Money
 )

@@ -15,5 +15,5 @@ fun Show.toResponse() = ShowResponse(
     name = name.value,
     movieId = movieId.value,
     date = date.zonedDate(),
-    basePrice = basePrice.value
+    basePrice = price.value
 )
