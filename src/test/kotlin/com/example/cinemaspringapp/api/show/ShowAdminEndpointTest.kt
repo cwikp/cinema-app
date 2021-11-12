@@ -37,14 +37,14 @@ class ShowAdminEndpointTest : BaseIntegrationTest() {
                 showId = showId,
                 name = SHOW_NAME,
                 movieId = MOVIE_ID,
-                date = MOVIE_DATE,
+                date = MOVIE_LOCAL_DATE_TIME + ZONE,
                 basePrice = MOVIE_BASE_PRICE
             ),
             shows.first(),
         )
 
         //when
-        val updatedDate = "2021-11-09T00:00:00Z"
+        val updatedDate = "2021-11-09T00:00"
         val updatedPrice = "29.99"
         val updateResponse = showRequests.updateShow(showId = showId, date = updatedDate, price = updatedPrice)
 
@@ -59,7 +59,7 @@ class ShowAdminEndpointTest : BaseIntegrationTest() {
                 showId = showId,
                 name = SHOW_NAME,
                 movieId = MOVIE_ID,
-                date = updatedDate,
+                date = updatedDate + ZONE,
                 basePrice = updatedPrice
             ),
             updatedShows.first()

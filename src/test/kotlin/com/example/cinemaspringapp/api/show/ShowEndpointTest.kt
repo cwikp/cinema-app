@@ -36,12 +36,12 @@ class ShowEndpointTest : BaseIntegrationTest() {
         assertTrue(shows.size == 3)
 
         val showDates = shows.map { it.date }
-        assertTrue(showDates.contains(DATE_1))
-        assertTrue(showDates.contains(DATE_2))
-        assertTrue(showDates.contains(DATE_3))
+        assertTrue(showDates.contains(DATE_1 + ZONE))
+        assertTrue(showDates.contains(DATE_2 + ZONE))
+        assertTrue(showDates.contains(DATE_3 + ZONE))
     }
 }
 
-private const val DATE_1 = "2021-11-10T15:00:00Z"
-private const val DATE_2 = "2021-11-10T18:00:00Z"
-private const val DATE_3 = "2021-11-10T22:00:00Z"
+private const val DATE_1 = "2021-11-10T15:00"
+private const val DATE_2 = "2021-11-10T18:00"
+private const val DATE_3 = "2021-11-10T22:00"

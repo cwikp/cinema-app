@@ -3,6 +3,7 @@ package com.example.cinemaspringapp.api.show
 import com.example.cinemaspringapp.show.Money.Companion.money
 import com.example.cinemaspringapp.movie.MovieId
 import com.example.cinemaspringapp.show.Show
+import com.example.cinemaspringapp.show.ShowDate
 import com.example.cinemaspringapp.show.ShowId
 import com.example.cinemaspringapp.show.ShowName
 import com.example.cinemaspringapp.show.ShowRepository
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @RestController
 @RequestMapping("/api/admin/shows")
@@ -36,7 +38,7 @@ class ShowAdminEndpoint(private val showRepository: ShowRepository) {
         showId = ShowId(),
         name = ShowName(name),
         movieId = MovieId(movieId),
-        date = date,
+        date = ShowDate(date.localDateTime, ZoneId.of(date.zoneId)),
         basePrice = money(price)
     )
 
@@ -44,21 +46,28 @@ class ShowAdminEndpoint(private val showRepository: ShowRepository) {
         showId = ShowId(showId),
         name = ShowName(name),
         movieId = MovieId(movieId),
-        date = date,
+        date = ShowDate(date.localDateTime, ZoneId.of(date.zoneId)),
         basePrice = money(price)
     )
 
     data class CreateShowRequest(
         val name: String,
         val movieId: String,
-        val date: Instant,
+        val date: DateRequest,
         val price: String
     )
 
     data class UpdateShowRequest(
         val name: String,
         val movieId: String,
-        val date: Instant,
+        val date: DateRequest,
         val price: String
     )
+
+    data class DateRequest(
+        val localDateTime: LocalDateTime,
+        val zoneId: String = DEFAULT_ZONE_ID,
+    )
 }
+
+private const val DEFAULT_ZONE_ID = "Europe/Warsaw"

@@ -14,6 +14,6 @@ fun Show.toResponse() = ShowResponse(
     showId = showId.value,
     name = name.value,
     movieId = movieId.value,
-    date = date.toString(),
+    date = date.zonedDate(),
     basePrice = basePrice.value
 )

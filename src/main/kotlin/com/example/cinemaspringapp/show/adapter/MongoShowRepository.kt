@@ -3,6 +3,7 @@ package com.example.cinemaspringapp.show.adapter
 import com.example.cinemaspringapp.show.Money
 import com.example.cinemaspringapp.movie.MovieId
 import com.example.cinemaspringapp.show.Show
+import com.example.cinemaspringapp.show.ShowDate
 import com.example.cinemaspringapp.show.ShowId
 import com.example.cinemaspringapp.show.ShowName
 import com.example.cinemaspringapp.show.ShowRepository
@@ -14,7 +15,8 @@ import org.springframework.data.mongodb.core.query.Criteria.where
 import org.springframework.data.mongodb.core.query.Query.query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.mongodb.core.query.isEqualTo
-import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class MongoShowRepository(private val mongoOperations: MongoOperations) : ShowRepository {
 
@@ -27,7 +29,8 @@ class MongoShowRepository(private val mongoOperations: MongoOperations) : ShowRe
             Update().apply {
                 set(NAME, show.name.value)
                 set(MOVIE_ID, show.movieId.value)
-                set(DATE, show.date)
+                set("$DATE.$LOCAL_DATE_TIME", show.date.localDateTime)
+                set("$DATE.$ZONE_ID", show.date.zoneId)
                 set(BASE_PRICE, show.basePrice.value)
             },
             ShowDocument::class.java
@@ -52,15 +55,20 @@ data class ShowDocument(
     @field:Indexed(unique = true) val showId: String,
     val name: String,
     val movieId: String,
-    val date: Instant,
+    val date: DateDocument,
     val basePrice: String
+)
+
+data class DateDocument(
+    val localDateTime: LocalDateTime,
+    val zoneId: String
 )
 
 private fun ShowDocument.toDomain() = Show(
     showId = ShowId(showId),
     name = ShowName(name),
     movieId = MovieId(movieId),
-    date = date,
+    date = ShowDate(date.localDateTime, ZoneId.of(date.zoneId)),
     basePrice = Money.money(basePrice)
 )
 
@@ -68,7 +76,7 @@ private fun Show.toDocument() = ShowDocument(
     showId = showId.value,
     name = name.value,
     movieId = movieId.value,
-    date = date,
+    date = DateDocument(date.localDateTime, date.zoneId.toString()),
     basePrice = basePrice.value
 )
 
@@ -76,4 +84,6 @@ private const val SHOW_ID = "showId"
 private const val NAME = "name"
 private const val MOVIE_ID = "movieId"
 private const val DATE = "date"
+private const val LOCAL_DATE_TIME = "localDateTime"
+private const val ZONE_ID = "zoneId"
 private const val BASE_PRICE = "basePrice"

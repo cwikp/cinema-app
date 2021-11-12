@@ -15,7 +15,7 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
     fun saveShow(
         name: String = SHOW_NAME,
         movieId: String = MOVIE_ID,
-        date: String = MOVIE_DATE,
+        date: String = MOVIE_LOCAL_DATE_TIME,
         price: String = MOVIE_BASE_PRICE
     ): ResponseEntity<ShowResponse> =
         restTemplate.exchange(
@@ -29,7 +29,7 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
         showId: String,
         name: String = SHOW_NAME,
         movieId: String = MOVIE_ID,
-        date: String = MOVIE_DATE,
+        date: String = MOVIE_LOCAL_DATE_TIME,
         price: String = MOVIE_BASE_PRICE
     ): ResponseEntity<ShowResponse> =
         restTemplate.exchange(
@@ -56,7 +56,9 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
         {
             "name": "$name",
             "movieId": "$movieId",
-            "date": "$date",
+            "date": {
+                "localDateTime": "$date"
+            },
             "price": "$price"
         }
     """
@@ -65,7 +67,9 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
         {
             "name": "$name",
             "movieId": "$movieId",
-            "date": "$date",
+            "date": {
+                "localDateTime": "$date"
+            },
             "price": "$price"
         }
     """
@@ -73,5 +77,6 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
 
 const val SHOW_NAME = "show-name-1"
 const val MOVIE_ID = "movie-id-1"
-const val MOVIE_DATE = "2021-11-08T00:00:00Z"
+const val MOVIE_LOCAL_DATE_TIME = "2021-11-08T00:00"
+const val ZONE = "+01:00[Europe/Warsaw]"
 const val MOVIE_BASE_PRICE = "10.00"
