@@ -11,7 +11,6 @@ import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.cache.CacheManager
@@ -44,8 +43,8 @@ class MovieConfiguration {
 
     private fun omdbRestTemplate(restTemplateBuilder: RestTemplateBuilder, connection: ConnectionProperties): RestTemplate =
         restTemplateBuilder
-            .setConnectTimeout(Duration.ofMillis(connection.connectTimeoutMillis))
-            .setReadTimeout(Duration.ofMillis(connection.socketTimeoutMillis))
+            .connectTimeout(Duration.ofMillis(connection.connectTimeoutMillis))
+            .readTimeout(Duration.ofMillis(connection.socketTimeoutMillis))
             .build()
 
     @Bean
@@ -59,7 +58,6 @@ class MovieConfiguration {
     }
 }
 
-@ConstructorBinding
 @ConfigurationProperties("external-services.omdb")
 data class OmdbConfigurationProperties(
     val address: String,

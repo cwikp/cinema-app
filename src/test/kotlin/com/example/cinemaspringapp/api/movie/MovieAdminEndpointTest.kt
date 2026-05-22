@@ -7,8 +7,8 @@ import com.example.cinemaspringapp.stub.PLOT
 import com.example.cinemaspringapp.stub.RELEASED
 import com.example.cinemaspringapp.stub.RUNTIME
 import com.example.cinemaspringapp.stub.TITLE
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

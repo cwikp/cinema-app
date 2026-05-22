@@ -1,46 +1,53 @@
 package com.example.cinemaspringapp.stub
 
-import com.xebialabs.restito.builder.stub.StubHttp.whenHttp
-import com.xebialabs.restito.semantics.Action.contentType
-import com.xebialabs.restito.semantics.Action.ok
-import com.xebialabs.restito.semantics.Action.status
-import com.xebialabs.restito.semantics.Action.stringContent
-import com.xebialabs.restito.semantics.Condition.get
-import com.xebialabs.restito.semantics.Condition.parameter
-import com.xebialabs.restito.server.StubServer
-import org.glassfish.grizzly.http.util.HttpStatus.INTERNAL_SERVER_ERROR_500
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 
-class OmdbApiStub(private val stubServer: StubServer) {
+class OmdbApiStub(private val wireMockServer: WireMockServer) {
 
     fun stubOmdbApiOkResponse(imdbId: String) {
-        omdbGetMovieDetailsStub(imdbId).then(
-            ok(),
-            contentType("application/json"),
-            stringContent(omdbMovieDetailsResponse(imdbId))
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/"))
+                .withQueryParam("apikey", equalTo(OMDB_SECRET))
+                .withQueryParam("i", equalTo(imdbId))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(omdbMovieDetailsResponse(imdbId))
+                )
         )
     }
 
     fun stubOmdbApiErrorResponse(imdbId: String) {
-        omdbGetMovieDetailsStub(imdbId).then(
-            ok(),
-            contentType("application/json"),
-            stringContent(omdbApiErrorResponse)
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/"))
+                .withQueryParam("apikey", equalTo(OMDB_SECRET))
+                .withQueryParam("i", equalTo(imdbId))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(omdbApiErrorResponse)
+                )
         )
     }
 
     fun stubOmdbApi500Response(imdbId: String) {
-        omdbGetMovieDetailsStub(imdbId).then(
-            status(INTERNAL_SERVER_ERROR_500),
-            contentType("application/json"),
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/"))
+                .withQueryParam("apikey", equalTo(OMDB_SECRET))
+                .withQueryParam("i", equalTo(imdbId))
+                .willReturn(
+                    aResponse()
+                        .withStatus(500)
+                        .withHeader("Content-Type", "application/json")
+                )
         )
     }
-
-    private fun omdbGetMovieDetailsStub(imdbId: String) =
-        whenHttp(stubServer).match(
-            get("/"),
-            parameter("apikey", OMDB_SECRET),
-            parameter("i", imdbId)
-        )
 }
 
 private fun omdbMovieDetailsResponse(imdbId: String) = """
