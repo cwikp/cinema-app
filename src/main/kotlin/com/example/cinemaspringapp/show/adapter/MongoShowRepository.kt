@@ -1,17 +1,19 @@
 package com.example.cinemaspringapp.show.adapter
 
-import com.example.cinemaspringapp.show.Money
-import com.example.cinemaspringapp.movie.MovieId
-import com.example.cinemaspringapp.show.Show
-import com.example.cinemaspringapp.show.ShowDate
-import com.example.cinemaspringapp.show.ShowId
-import com.example.cinemaspringapp.show.ShowName
+import com.example.cinemaspringapp.show.model.Money
+import com.example.cinemaspringapp.movie.model.MovieId
+import com.example.cinemaspringapp.show.model.Show
+import com.example.cinemaspringapp.show.model.ShowDate
+import com.example.cinemaspringapp.show.model.ShowId
+import com.example.cinemaspringapp.show.model.ShowName
 import com.example.cinemaspringapp.show.ShowRepository
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.query.Criteria.where
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Query.query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.mongodb.core.query.isEqualTo
@@ -41,7 +43,10 @@ class MongoShowRepository(private val mongoOperations: MongoOperations) : ShowRe
     }
 
     override fun findAll(): Collection<Show> =
-        mongoOperations.findAll(ShowDocument::class.java).map { it.toDomain() }
+        mongoOperations.find(
+            Query().with(Sort.by(Sort.Direction.DESC, NAME)),
+            ShowDocument::class.java
+        ).map { it.toDomain() }
 
     private fun findOne(showId: ShowId): Show? =
         mongoOperations.findOne(

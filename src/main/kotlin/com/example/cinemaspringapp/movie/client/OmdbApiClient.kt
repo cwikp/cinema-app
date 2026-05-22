@@ -1,11 +1,11 @@
-package com.example.cinemaspringapp.movie.adapter
+package com.example.cinemaspringapp.movie.client
 
 import com.example.cinemaspringapp.AllOpen
 import com.example.cinemaspringapp.movie.ImdbMovieDetails
 import com.example.cinemaspringapp.movie.config.OmdbConfigurationProperties
-import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory.ImdbId
-import com.example.cinemaspringapp.movie.imdb.ImdbIdValidator
-import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
+import com.example.cinemaspringapp.movie.client.imdb.ImdbIdFactory.ImdbId
+import com.example.cinemaspringapp.movie.client.imdb.ImdbIdValidator
+import com.example.cinemaspringapp.movie.client.imdb.ImdbMovieDetailsProvider
 import com.fasterxml.jackson.annotation.JsonAlias
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.retry.annotation.Backoff

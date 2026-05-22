@@ -1,6 +1,6 @@
-package com.example.cinemaspringapp.api.show
+package com.example.cinemaspringapp.api.show.model
 
-import com.example.cinemaspringapp.show.Show
+import com.example.cinemaspringapp.show.model.Show
 
 data class ShowResponse(
     val showId: String,

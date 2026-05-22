@@ -1,6 +1,6 @@
 package com.example.cinemaspringapp.api.error
 
-import com.example.cinemaspringapp.movie.adapter.OmdbApiMovieDetailsNotFoundException
+import com.example.cinemaspringapp.movie.client.OmdbApiMovieDetailsNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler

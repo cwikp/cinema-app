@@ -1,11 +1,9 @@
-package com.example.cinemaspringapp.movie.adapter
+package com.example.cinemaspringapp.movie.repository
 
-import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory
-import com.example.cinemaspringapp.movie.Movie
-import com.example.cinemaspringapp.movie.MovieId
-import com.example.cinemaspringapp.movie.MovieRating
-import com.example.cinemaspringapp.movie.MovieRepository
-import com.example.cinemaspringapp.movie.UserMovieRating
+import com.example.cinemaspringapp.movie.client.imdb.ImdbIdFactory
+import com.example.cinemaspringapp.movie.model.MovieId
+import com.example.cinemaspringapp.movie.model.MovieRating
+import com.example.cinemaspringapp.movie.model.UserMovieRating
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document

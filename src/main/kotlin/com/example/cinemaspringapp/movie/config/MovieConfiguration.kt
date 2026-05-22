@@ -1,13 +1,13 @@
 package com.example.cinemaspringapp.movie.config
 
 import com.example.cinemaspringapp.movie.MovieFacade
-import com.example.cinemaspringapp.movie.MovieRepository
-import com.example.cinemaspringapp.movie.adapter.MOVIE_DETAILS_CACHE_NAME
-import com.example.cinemaspringapp.movie.adapter.MongoMovieRepository
-import com.example.cinemaspringapp.movie.adapter.OmdbApiClient
-import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory
-import com.example.cinemaspringapp.movie.imdb.ImdbIdValidator
-import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
+import com.example.cinemaspringapp.movie.repository.MovieRepository
+import com.example.cinemaspringapp.movie.client.MOVIE_DETAILS_CACHE_NAME
+import com.example.cinemaspringapp.movie.repository.MongoMovieRepository
+import com.example.cinemaspringapp.movie.client.OmdbApiClient
+import com.example.cinemaspringapp.movie.client.imdb.ImdbIdFactory
+import com.example.cinemaspringapp.movie.client.imdb.ImdbIdValidator
+import com.example.cinemaspringapp.movie.client.imdb.ImdbMovieDetailsProvider
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties

@@ -1,6 +1,11 @@
 package com.example.cinemaspringapp.movie
 
-import com.example.cinemaspringapp.movie.imdb.ImdbMovieDetailsProvider
+import com.example.cinemaspringapp.movie.client.imdb.ImdbMovieDetailsProvider
+import com.example.cinemaspringapp.movie.model.MovieId
+import com.example.cinemaspringapp.movie.model.MovieRating
+import com.example.cinemaspringapp.movie.model.UserMovieRating
+import com.example.cinemaspringapp.movie.repository.Movie
+import com.example.cinemaspringapp.movie.repository.MovieRepository
 
 class MovieFacade(
     private val movieRepository: MovieRepository,

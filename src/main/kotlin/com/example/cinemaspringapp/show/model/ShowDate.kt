@@ -1,4 +1,4 @@
-package com.example.cinemaspringapp.show
+package com.example.cinemaspringapp.show.model
 
 import java.time.LocalDateTime
 import java.time.ZoneId

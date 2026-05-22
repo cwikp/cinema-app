@@ -1,10 +1,12 @@
 package com.example.cinemaspringapp.api.movie
 
-import com.example.cinemaspringapp.movie.Movie
+import com.example.cinemaspringapp.api.movie.model.MovieDetailsResponse
+import com.example.cinemaspringapp.api.movie.model.toResponse
+import com.example.cinemaspringapp.movie.repository.Movie
 import com.example.cinemaspringapp.movie.MovieFacade
-import com.example.cinemaspringapp.movie.MovieId
-import com.example.cinemaspringapp.movie.MovieRating
-import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory
+import com.example.cinemaspringapp.movie.model.MovieId
+import com.example.cinemaspringapp.movie.model.MovieRating
+import com.example.cinemaspringapp.movie.client.imdb.ImdbIdFactory
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,7 +30,7 @@ class MovieAdminEndpoint(
     private fun CreateMovieRequest.toDomain() = Movie(
         movieId = MovieId(),
         imdbId = imdbIdFactory.createValidatedImdbId(imdbId),
-        rating = MovieRating.initial()
+        rating = MovieRating.INITIAL
     )
 
     data class CreateMovieRequest(

@@ -1,9 +1,11 @@
 package com.example.cinemaspringapp.api.movie
 
+import com.example.cinemaspringapp.api.movie.model.MovieDetailsResponse
+import com.example.cinemaspringapp.api.movie.model.toResponse
 import com.example.cinemaspringapp.movie.MovieFacade
-import com.example.cinemaspringapp.movie.MovieId
-import com.example.cinemaspringapp.movie.MovieRating
-import com.example.cinemaspringapp.movie.UserMovieRating
+import com.example.cinemaspringapp.movie.model.MovieId
+import com.example.cinemaspringapp.movie.model.MovieRating
+import com.example.cinemaspringapp.movie.model.UserMovieRating
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,18 +33,18 @@ class MovieEndpoint(private val movieFacade: MovieFacade) {
             )
         ).toResponse(movieId)
     }
-
-    private fun MovieRating.toResponse(movieId: String) = RateMovieResponse(
-        movieId = movieId,
-        rating = value()
-    )
-
-    data class RateMovieRequest(
-        val userRating: Long
-    )
-
-    data class RateMovieResponse(
-        val movieId: String,
-        val rating: String
-    )
 }
+
+private fun MovieRating.toResponse(movieId: String) = RateMovieResponse(
+    movieId = movieId,
+    rating = value()
+)
+
+data class RateMovieRequest(
+    val userRating: Long
+)
+
+data class RateMovieResponse(
+    val movieId: String,
+    val rating: String
+)

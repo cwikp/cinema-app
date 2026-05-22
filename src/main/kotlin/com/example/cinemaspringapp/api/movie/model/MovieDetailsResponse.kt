@@ -1,4 +1,4 @@
-package com.example.cinemaspringapp.api.movie
+package com.example.cinemaspringapp.api.movie.model
 
 import com.example.cinemaspringapp.movie.MovieDetails
 

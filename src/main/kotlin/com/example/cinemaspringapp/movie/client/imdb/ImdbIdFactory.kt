@@ -1,4 +1,4 @@
-package com.example.cinemaspringapp.movie.imdb
+package com.example.cinemaspringapp.movie.client.imdb
 
 class ImdbIdFactory(private val imdbIdValidator: ImdbIdValidator) {
 

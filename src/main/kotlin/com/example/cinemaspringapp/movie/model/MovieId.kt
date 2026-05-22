@@ -1,4 +1,4 @@
-package com.example.cinemaspringapp.movie
+package com.example.cinemaspringapp.movie.model
 
 import java.util.UUID
 
