@@ -2,26 +2,26 @@ package com.example.cinemaspringapp.api.show.model
 
 import java.time.LocalDateTime
 
-data class CreateShowRequest(
+data class CreateShowApiRequest(
     val name: String,
     val movieId: String,
-    val date: DateRequest,
-    val price: PriceRequest
+    val date: DateApiRequest,
+    val price: PriceApiRequest
 )
 
-data class UpdateShowRequest(
+data class UpdateShowApiRequest(
     val name: String,
     val movieId: String,
-    val date: DateRequest,
-    val price: PriceRequest
+    val date: DateApiRequest,
+    val price: PriceApiRequest
 )
 
-data class DateRequest(
+data class DateApiRequest(
     val localDateTime: LocalDateTime,
     val zoneId: String = DEFAULT_ZONE_ID,
 )
 
-data class PriceRequest(
+data class PriceApiRequest(
     val basePrice: String,
     val currency: String = DEFAULT_CURRENCY
 )

@@ -1,11 +1,12 @@
 package com.example.cinemaspringapp.api.movie
 
-import com.example.cinemaspringapp.api.movie.model.MovieDetailsResponse
-import com.example.cinemaspringapp.api.movie.model.toResponse
-import com.example.cinemaspringapp.movie.MovieFacade
-import com.example.cinemaspringapp.movie.model.MovieId
-import com.example.cinemaspringapp.movie.model.MovieRating
-import com.example.cinemaspringapp.movie.model.UserMovieRating
+import com.example.cinemaspringapp.api.movie.model.MovieDetailsApiResponse
+import com.example.cinemaspringapp.api.movie.model.toApiResponse
+import com.example.cinemaspringapp.domain.movie.MovieFacade
+import com.example.cinemaspringapp.domain.movie.model.MovieId
+import com.example.cinemaspringapp.domain.movie.model.MovieRating
+import com.example.cinemaspringapp.domain.movie.model.MovieSingleRating
+import com.example.cinemaspringapp.domain.movie.model.SingleRating
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,17 +20,17 @@ import org.springframework.web.bind.annotation.RestController
 class MovieEndpoint(private val movieFacade: MovieFacade) {
 
     @GetMapping("/{movieId}")
-    fun getMovieDetails(@PathVariable movieId: String): ResponseEntity<MovieDetailsResponse> =
-        movieFacade.movieDetails(MovieId(movieId))
-            ?.let { ResponseEntity.ok(it.toResponse()) }
+    fun getMovieDetails(@PathVariable movieId: String): ResponseEntity<MovieDetailsApiResponse> =
+        movieFacade.movieDetails(MovieId.fromString(movieId))
+            ?.let { ResponseEntity.ok(it.toApiResponse()) }
             ?: ResponseEntity.notFound().build()
 
     @PostMapping("/{movieId}/ratings")
     fun rateMovie(@PathVariable movieId: String, @RequestBody rateMovieRequest: RateMovieRequest) {
         movieFacade.rateMovie(
-            UserMovieRating(
-                movieId = MovieId(movieId),
-                rating = rateMovieRequest.userRating
+            MovieSingleRating(
+                movieId = MovieId.fromString(movieId),
+                singleRating = SingleRating(rateMovieRequest.userRating)
             )
         ).toResponse(movieId)
     }
@@ -37,11 +38,11 @@ class MovieEndpoint(private val movieFacade: MovieFacade) {
 
 private fun MovieRating.toResponse(movieId: String) = RateMovieResponse(
     movieId = movieId,
-    rating = value()
+    rating = this.value
 )
 
 data class RateMovieRequest(
-    val userRating: Long
+    val userRating: Int
 )
 
 data class RateMovieResponse(

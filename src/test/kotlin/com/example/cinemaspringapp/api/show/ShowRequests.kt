@@ -1,7 +1,6 @@
 package com.example.cinemaspringapp.api.show
 
-import com.example.cinemaspringapp.api.show.ShowEndpoint.ShowsResponse
-import com.example.cinemaspringapp.api.show.model.ShowResponse
+import com.example.cinemaspringapp.api.show.model.ShowApiResponse
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -18,12 +17,12 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
         movieId: String = MOVIE_ID,
         date: String = MOVIE_LOCAL_DATE_TIME,
         price: String = MOVIE_BASE_PRICE
-    ): ResponseEntity<ShowResponse> =
+    ): ResponseEntity<ShowApiResponse> =
         restTemplate.exchange(
             "/api/admin/shows",
             POST,
             HttpEntity(saveShowRequestJson(name, movieId, date, price), headers()),
-            ShowResponse::class.java
+            ShowApiResponse::class.java
         )
 
     fun updateShow(
@@ -32,20 +31,20 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
         movieId: String = MOVIE_ID,
         date: String = MOVIE_LOCAL_DATE_TIME,
         price: String = MOVIE_BASE_PRICE
-    ): ResponseEntity<ShowResponse> =
+    ): ResponseEntity<ShowApiResponse> =
         restTemplate.exchange(
             "/api/admin/shows/$showId",
             PUT,
             HttpEntity(updateShowRequestJson(name, movieId, date, price), headers()),
-            ShowResponse::class.java
+            ShowApiResponse::class.java
         )
 
-    fun getShows(): ResponseEntity<ShowsResponse> =
+    fun getShows(): ResponseEntity<ShowsApiResponse> =
         restTemplate.exchange(
             "/api/shows",
             GET,
             HttpEntity(null, headers()),
-            ShowsResponse::class.java
+            ShowsApiResponse::class.java
         )
 
     private fun headers() = HttpHeaders().apply {
@@ -81,7 +80,7 @@ class ShowRequests(private val restTemplate: TestRestTemplate) {
 }
 
 const val SHOW_NAME = "show-name-1"
-const val MOVIE_ID = "movie-id-1"
+const val MOVIE_ID = "00000000-0000-0000-0000-000000000001"
 const val MOVIE_LOCAL_DATE_TIME = "2021-11-08T00:00"
 const val ZONE = "+01:00[Europe/Warsaw]"
 const val MOVIE_BASE_PRICE = "10.00"

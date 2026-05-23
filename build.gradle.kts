@@ -19,8 +19,6 @@ repositories {
     mavenCentral()
 }
 
-val mockitoAgent = configurations.create("mockitoAgent")
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
@@ -33,11 +31,16 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.0.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 
+    //logger
+    implementation("org.slf4j:slf4j-api:2.0.16")
+    implementation("ch.qos.logback:logback-classic:1.5.23")
+    implementation("io.github.oshai:kotlin-logging-jvm:7.0.13")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("io.mockk:mockk:1.14.7")
     testImplementation("org.testcontainers:mongodb:1.21.4")
     testImplementation("com.github.tomakehurst:wiremock-standalone:3.0.1")
-    mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
 }
 
 kotlin {
@@ -53,6 +56,5 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
 

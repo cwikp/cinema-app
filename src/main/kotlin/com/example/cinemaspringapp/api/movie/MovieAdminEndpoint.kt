@@ -1,12 +1,9 @@
 package com.example.cinemaspringapp.api.movie
 
-import com.example.cinemaspringapp.api.movie.model.MovieDetailsResponse
-import com.example.cinemaspringapp.api.movie.model.toResponse
-import com.example.cinemaspringapp.movie.repository.Movie
-import com.example.cinemaspringapp.movie.MovieFacade
-import com.example.cinemaspringapp.movie.model.MovieId
-import com.example.cinemaspringapp.movie.model.MovieRating
-import com.example.cinemaspringapp.movie.client.imdb.ImdbIdFactory
+import com.example.cinemaspringapp.api.movie.model.MovieDetailsApiResponse
+import com.example.cinemaspringapp.api.movie.model.toApiResponse
+import com.example.cinemaspringapp.domain.movie.MovieFacade
+import com.example.cinemaspringapp.domain.movie.moviedetails.ImdbId
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,23 +15,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/admin/movies")
 class MovieAdminEndpoint(
     private val movieFacade: MovieFacade,
-    private val imdbIdFactory: ImdbIdFactory,
 ) {
-
     @PostMapping
-    fun createMovie(@RequestBody createMovieRequest: CreateMovieRequest): ResponseEntity<MovieDetailsResponse> =
-        createMovieRequest.toDomain()
-            .let { movieFacade.createMovie(it) }
-            .let { ResponseEntity.status(CREATED).body(it.toResponse()) }
-
-    private fun CreateMovieRequest.toDomain() = Movie(
-        movieId = MovieId(),
-        imdbId = imdbIdFactory.createValidatedImdbId(imdbId),
-        rating = MovieRating.INITIAL
-    )
-
-    data class CreateMovieRequest(
-        val imdbId: String
-    )
+    fun createMovie(@RequestBody request: CreateMovieApiRequest): ResponseEntity<MovieDetailsApiResponse> =
+        movieFacade.createMovie(
+            imdbId = ImdbId(request.imdbId)
+        ).let { ResponseEntity.status(CREATED).body(it.toApiResponse()) }
 }
 
+data class CreateMovieApiRequest(
+    val imdbId: String
+)
