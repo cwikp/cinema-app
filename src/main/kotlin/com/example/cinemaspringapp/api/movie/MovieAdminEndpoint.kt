@@ -1,10 +1,9 @@
 package com.example.cinemaspringapp.api.movie
 
-import com.example.cinemaspringapp.movie.Movie
-import com.example.cinemaspringapp.movie.MovieFacade
-import com.example.cinemaspringapp.movie.MovieId
-import com.example.cinemaspringapp.movie.MovieRating
-import com.example.cinemaspringapp.movie.imdb.ImdbIdFactory
+import com.example.cinemaspringapp.api.movie.model.MovieDetailsApiResponse
+import com.example.cinemaspringapp.api.movie.model.toApiResponse
+import com.example.cinemaspringapp.domain.movie.MovieFacade
+import com.example.cinemaspringapp.domain.movie.moviedetails.ImdbId
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,23 +15,18 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/admin/movies")
 class MovieAdminEndpoint(
     private val movieFacade: MovieFacade,
-    private val imdbIdFactory: ImdbIdFactory,
 ) {
-
     @PostMapping
-    fun createMovie(@RequestBody createMovieRequest: CreateMovieRequest): ResponseEntity<MovieDetailsResponse> =
-        createMovieRequest.toDomain()
-            .let { movieFacade.createMovie(it) }
-            .let { ResponseEntity.status(CREATED).body(it.toResponse()) }
-
-    private fun CreateMovieRequest.toDomain() = Movie(
-        movieId = MovieId(),
-        imdbId = imdbIdFactory.createValidatedImdbId(imdbId),
-        rating = MovieRating.initial()
-    )
-
-    data class CreateMovieRequest(
-        val imdbId: String
-    )
+    fun createMovie(@RequestBody request: CreateMovieApiRequest): ResponseEntity<MovieDetailsApiResponse> {
+        val movie = movieFacade.createMovie(
+            imdbId = ImdbId(request.imdbId)
+        )
+        return ResponseEntity
+            .status(CREATED)
+            .body(movie.toApiResponse())
+    }
 }
 
+data class CreateMovieApiRequest(
+    val imdbId: String
+)

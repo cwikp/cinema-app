@@ -4,7 +4,7 @@ external-services:
     apikey: "fill-me"
     connection:
       connectTimeoutMillis: 100
-      socketTimeoutMillis: 500
+      socketTimeoutMillis: 1000
     retry:
       maxAttempts: 3
       delayMs: 500
