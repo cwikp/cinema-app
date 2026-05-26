@@ -26,9 +26,9 @@ class MongoMovieRepository(private val mongoOperations: MongoOperations) : Movie
         )?.toDomain()
 
 
-    // note that even if though the update operation is atomic, some race condition may happen as we do not check current ratings_number
-    // also we do not store rating per user
-    // this is good enough if we do not care about strong consistency on ratings, but we have to be aware of its limitations
+    // note: inc update operation on single document is atomic which is good for a simple case with concurrent writes
+    // however right now we do not verify duplicated request, nor do we store rating per user
+    // if we care about strong consistency and/or auditability on ratings, this simple implementation would not be sufficient
     override fun storeRating(movieSingleRating: MovieSingleRating): Movie {
         val result = mongoOperations.updateFirst(
             query(where(MOVIE_ID).isEqualTo(movieSingleRating.movieId.value)),
@@ -44,7 +44,7 @@ class MongoMovieRepository(private val mongoOperations: MongoOperations) : Movie
 }
 
 private fun Movie.toDocument() = MovieDocument(
-    movieId = movieId.value.toString(),
+    movieId = movieId.value,
     imdbId = imdbId.value,
     score = rating.score,
     ratingsNumber = rating.ratingsNumber

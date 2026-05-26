@@ -4,6 +4,7 @@ import com.example.cinemaspringapp.domain.movie.MovieFacade
 import com.example.cinemaspringapp.domain.movie.moviedetails.CachedImdbMovieDetailsProvider
 import com.example.cinemaspringapp.domain.movie.moviedetails.client.OmdbApiClient
 import com.example.cinemaspringapp.domain.movie.moviedetails.ImdbMovieDetailsProvider
+import com.example.cinemaspringapp.domain.movie.moviedetails.client.OmdbApiHttpClient
 import com.example.cinemaspringapp.domain.movie.repository.MongoMovieRepository
 import com.example.cinemaspringapp.domain.movie.repository.MovieRepository
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -32,8 +33,11 @@ class MovieConfiguration {
         restTemplateBuilder: RestTemplateBuilder,
         omdbConfig: OmdbConfigurationProperties
     ): ImdbMovieDetailsProvider {
+        val omdbApiHttpClient = OmdbApiHttpClient(
+            omdbRestTemplate(restTemplateBuilder, omdbConfig.connection)
+        )
         val omdbApiClient = OmdbApiClient(
-            omdbRestTemplate = omdbRestTemplate(restTemplateBuilder, omdbConfig.connection),
+            omdbApiHttpClient = omdbApiHttpClient,
             omdbConfig = omdbConfig
         )
         return CachedImdbMovieDetailsProvider(omdbApiClient)

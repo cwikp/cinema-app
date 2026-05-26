@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 class ImdbIdTest {
     @Test
     fun `creates ImdbId for minimal length`() {
-        val id = ImdbId("tt")
-        assertEquals("tt", id.value)
+        val id = ImdbId("tt123")
+        assertEquals("tt123", id.value)
     }
 
     @Test
@@ -19,13 +19,13 @@ class ImdbIdTest {
     @Test
     fun `throws when too short`() {
         val ex = assertThrows(IllegalArgumentException::class.java) { ImdbId("t") }
-        assertTrue(ex.message!!.contains("between 2 and 10"))
+        assertTrue(ex.message!!.contains("between 5 and 10"))
     }
 
     @Test
     fun `throws when too long`() {
         val ex = assertThrows(IllegalArgumentException::class.java) { ImdbId("ab123456789") } // length 11
-        assertTrue(ex.message!!.contains("between 2 and 10"))
+        assertTrue(ex.message!!.contains("between 5 and 10"))
     }
 
     @Test

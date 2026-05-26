@@ -17,10 +17,14 @@ class MovieAdminEndpoint(
     private val movieFacade: MovieFacade,
 ) {
     @PostMapping
-    fun createMovie(@RequestBody request: CreateMovieApiRequest): ResponseEntity<MovieDetailsApiResponse> =
-        movieFacade.createMovie(
+    fun createMovie(@RequestBody request: CreateMovieApiRequest): ResponseEntity<MovieDetailsApiResponse> {
+        val movie = movieFacade.createMovie(
             imdbId = ImdbId(request.imdbId)
-        ).let { ResponseEntity.status(CREATED).body(it.toApiResponse()) }
+        )
+        return ResponseEntity
+            .status(CREATED)
+            .body(movie.toApiResponse())
+    }
 }
 
 data class CreateMovieApiRequest(

@@ -20,23 +20,30 @@ import org.springframework.web.bind.annotation.RestController
 class MovieEndpoint(private val movieFacade: MovieFacade) {
 
     @GetMapping("/{movieId}")
-    fun getMovieDetails(@PathVariable movieId: String): ResponseEntity<MovieDetailsApiResponse> =
-        movieFacade.movieDetails(MovieId.fromString(movieId))
+    fun getMovieDetails(@PathVariable movieId: String): ResponseEntity<MovieDetailsApiResponse> {
+        val movieDetails = movieFacade.movieDetails(MovieId.fromString(movieId))
+        return movieDetails
             ?.let { ResponseEntity.ok(it.toApiResponse()) }
             ?: ResponseEntity.notFound().build()
+    }
 
     @PostMapping("/{movieId}/ratings")
-    fun rateMovie(@PathVariable movieId: String, @RequestBody rateMovieRequest: RateMovieRequest) {
-        movieFacade.rateMovie(
-            MovieSingleRating(
-                movieId = MovieId.fromString(movieId),
-                singleRating = SingleRating(rateMovieRequest.userRating)
-            )
-        ).toResponse(movieId)
+    fun rateMovie(@PathVariable movieId: String, @RequestBody rateMovieRequest: RateMovieRequest): ResponseEntity<RateMovieResponse> {
+        val movieRating = movieFacade.rateMovie(
+            rateMovieRequest.toDomain(movieId)
+        )
+        return ResponseEntity.ok(movieRating.toApiResponse(movieId))
     }
 }
 
-private fun MovieRating.toResponse(movieId: String) = RateMovieResponse(
+private fun RateMovieRequest.toDomain(
+    movieId: String,
+): MovieSingleRating = MovieSingleRating(
+    movieId = MovieId.fromString(movieId),
+    singleRating = SingleRating(this.userRating)
+)
+
+private fun MovieRating.toApiResponse(movieId: String) = RateMovieResponse(
     movieId = movieId,
     rating = this.value
 )

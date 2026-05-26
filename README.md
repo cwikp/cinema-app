@@ -1,7 +1,31 @@
 cinema-spring-app
 ==============================
 
-### Technology
+## About
+A showcase backend service for a simple cinema web/mobile app. 
+Service provides an ability to create shows and fetch movie details from external api provider.  
+
+## Endpoints
+- [Internal] An endpoint in which admin (owner) can add movie to their movie catalog.
+- [Internal] An endpoint in which admin (owner) can create/update show for a movie existing in movie catalog.
+- An endpoint in which customers can fetch show times.
+- An endpoint in which customers can fetch details about one of the movies from catalog (e.g. name, description, release date, rating, IMDb rating).
+- An endpoint in which customers can leave a review rating (from 1-10) about a particular movie in movie catalog.
+
+When running, visit main app path `/`to see the full Swagger API documentation.
+
+## External Client
+For fetching details about the movie, Open Movie Database API was integrated. 
+OMDb API is a public RESTful web service which serves data from IMDb movie catalog. 
+Official documentation: https://www.omdbapi.com/
+
+### API Key
+OMDb API requires key which can be obtained for free here:
+https://www.omdbapi.com/apikey.aspx
+
+See [Configuration](#-configuration)  section for how to add the key to the app.
+
+## Technology
 - Kotlin and Spring-Boot framework
 - Database: MongoDB
 
@@ -17,16 +41,16 @@ Replace the value of OMDb API key in `application.yml` or any other suitable con
 
 ---
 
-## Choices
+## Architecture decisions
 ### Database
-For this application NoSQL database MongoDB was chosen. The reasons for that are as follows:
+For this application a NoSQL database MongoDB was chosen. The reasons for that are as follows:
 - The requirements for this project are not complete, the schema can easily be changed if needed.
 - There are unknown number of requests the system should handle. MongoDB provides reasonable write times as well as very fast read times. Since it is a cinema app it is better to assume there are going to be a lot of reads from users and a few write requests from cinema owners. MongoDB works well in this situation (with properly designed documents with indexes).
 - It can easily be scaled if needed by using replica sets and/or sharding.
 ### Connection timeouts
 The only external service used in project is currently the OMDb API. There is little information about the expected response times (preferably the 99th percentile) to be found on their website, besides a short mention ```response times should be < 500ms```. Therefore initial timeouts were set (easily configurable if needed):
 - connectTimeout: 100ms
-- readTimeout: 500ms
+- readTimeout: 1000ms (2*500ms)
 ### Cache
 Since the key only supports a 1,000 daily request limit, a simple caching mechanism was configured.
 If needed, the cache could hold the values indefinitely since details such as movie name, release date, etc. should never change.
@@ -52,8 +76,8 @@ This could easily be achieved with `metrics-spring` (dropwizard) and saving the 
 * Alerting: in bare minimum there should exist another server that checks whether this server is alive by periodically calling one of the endpoints (e.g. `/health`). Other metrics could also have some alerts specified, if for example there is a sudden spike of 5xx responses from one of the endpoints (could be setup in Grafana).
 
 ### Logging
-For easier debugging there should be certain levels of logging (debug/info/error) configured within the server, by using e.g. log4j library. Ideally the logs should be collected and sent to external storage (or even e-mail) so that we can easily browse them in a running application.
+For easier debugging there should be certain levels of logging (debug/info/error) configured within the server, by using e.g. log4j library. Ideally the logs should be collected and sent to external storage (or even e-mail) so that we can easily view/query them while application is running.
 
 ### Tests
-Finally, more tests could be written to check for some corner case situations like handling incorrect data or timeouts. Even in a simple application like this, there are still a lot of things that could go wrong.
+Some basic API and unit tests already exist. However, more extensive test cases could always be written. Verifying some edge cases or handling incorrect data and timeouts. Even in a simple application like this, there are still a lot of things that could go wrong.
 

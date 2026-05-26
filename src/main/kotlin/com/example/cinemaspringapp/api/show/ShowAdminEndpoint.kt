@@ -26,14 +26,18 @@ import java.time.ZoneId
 class ShowAdminEndpoint(private val showFacade: ShowFacade) {
 
     @PostMapping
-    fun createShow(@RequestBody request: CreateShowApiRequest): ResponseEntity<ShowApiResponse> =
-        showFacade.createShow(request.toDomain())
+    fun createShow(@RequestBody request: CreateShowApiRequest): ResponseEntity<ShowApiResponse> {
+        val show = request.toDomain()
+        return showFacade.createShow(show)
             .let { ResponseEntity.status(CREATED).body(it.toApiResponse()) }
+    }
 
     @PutMapping("/{showId}")
-    fun updateShow(@PathVariable showId: String, @RequestBody updateShowApiRequest: UpdateShowApiRequest) =
-        showFacade.updateShow(updateShowApiRequest.toDomain(showId))
+    fun updateShow(@PathVariable showId: String, @RequestBody updateShowApiRequest: UpdateShowApiRequest): ResponseEntity<ShowApiResponse?> {
+        val show = updateShowApiRequest.toDomain(showId)
+        return showFacade.updateShow(show)
             .let { ResponseEntity.ok(it.toApiResponse()) }
+    }
 }
 
 private fun CreateShowApiRequest.toDomain() = Show(
